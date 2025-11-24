@@ -33,7 +33,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends libpq-dev && \
 
 COPY --from=builder /wheels /wheels
 RUN python -m pip install --upgrade pip && \
-    pip install --no-deps --no-index --find-links /wheels -r /app/requirements.txt
+    pip install --no-deps --no-index --find-links /wheels -r requirements.txt
 
 # Copy app source
 COPY . /app
