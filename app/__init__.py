@@ -6,6 +6,21 @@ from app import models
 def create_app(config_object=None):
     app = Flask(__name__, instance_relative_config=True)
 
+    # register routes / blueprints
+    register_blueprints(app)
+
+    # === ADD THIS SECTION ===
+    @app.route('/')
+    def health_check():
+        return {
+            "status": "success", 
+            "message": "The Backend is Running!", 
+            "service": "Ecommerce API"
+        }, 200
+    # ========================
+
+    return app
+
     # Load default config
     # try to use config.py from project root if present
     app.config.from_object('config.ProductionConfig') if not app.config.get('TESTING') else None

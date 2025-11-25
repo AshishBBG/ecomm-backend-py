@@ -14,7 +14,7 @@ def register():
     name = data.get("name")
     email = data.get("email")
     password = data.get("password")
-
+    
     if not email or not password or not name:
         return error_response("Name, Email and password are required", 400)
 
