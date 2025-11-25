@@ -45,8 +45,7 @@ def _build_mysql_url_from_env() -> Optional[str]:
     )
     host = os.getenv("MYSQLHOST") or os.getenv("MYSQL_HOST") or os.getenv("RAILWAY_PRIVATE_DOMAIN")
     port = os.getenv("MYSQLPORT") or os.getenv("MYSQL_PORT") or "3306"
-    db = os.getenv("MYSQLDATABASE") or os.getenv("MYSQL_DATABASE") or os.getenv("DB_NAME")
-
+    db = os.getenv("MYSQL_URL") or os.getenv("MYSQL_URL") or os.getenv("DB_NAME")
     if not (user and password and host and db):
         return None
 
