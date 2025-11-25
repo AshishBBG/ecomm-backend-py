@@ -30,7 +30,7 @@ def login():
     data = request.get_json() or {}
     email = data.get("email")
     password = data.get("password")
-
+   
     user, token = authenticate_user(email, password)
     if not user:
         return error_response("Invalid credentials", 401)
