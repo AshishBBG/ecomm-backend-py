@@ -11,14 +11,15 @@ auth_bp = Blueprint("auth", __name__)
 @auth_bp.route("/register", methods=["POST"])
 def register():
     data = request.get_json() or {}
+    name = data.get("name")
     email = data.get("email")
     password = data.get("password")
 
-    if not email or not password:
-        return error_response("Email and password are required", 400)
+    if not email or not password or not name:
+        return error_response("Name, Email and password are required", 400)
 
-    user = create_user(email, password)
-    return success_response({"id": user.id, "email": user.email}, 201)
+    user = create_user(name, email, password)
+    return success_response({"id": user.id, "name": user.username ,"email": user.email}, 201)
 
 
 

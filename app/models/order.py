@@ -35,7 +35,7 @@ class Order(db.Model):
 
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
 
-    user_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey("users.id", ondelete="SET NULL"), nullable=False, index=True)
+    user_id: Mapped[int | None] = mapped_column(db.Integer, db.ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True)
 
     # Use Numeric for currency: precision 12, scale 2 (support up to ~999,999,999.99)
     total_amount: Mapped[float] = mapped_column(Numeric(12, 2), nullable=False)
@@ -100,5 +100,57 @@ class Order(db.Model):
 
         if include_user and hasattr(self, "user") and self.user is not None:
             data["user"] = {"id": self.user.id, "username": getattr(self.user, "username", None)}
+ 
+        return data
 
+# ==========================================
+# PASTE THIS AT THE BOTTOM OF app/models/order.py
+# ==========================================
+
+class OrderItem(db.Model):
+    __tablename__ = "order_items"
+    __table_args__ = (
+        db.Index("ix_order_items_order_id", "order_id"),
+        db.Index("ix_order_items_product_id", "product_id"),
+    )
+
+    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
+
+    # Link to the Order
+    order_id: Mapped[int] = mapped_column(
+        db.Integer, 
+        db.ForeignKey("orders.id", ondelete="CASCADE"), 
+        nullable=False
+    )
+
+    # Link to the Product
+    product_id: Mapped[int | None] = mapped_column(
+        db.Integer, 
+        db.ForeignKey("products.id", ondelete="SET NULL"), 
+        nullable=True
+    )
+
+    quantity: Mapped[int] = mapped_column(db.Integer, default=1, nullable=False)
+    
+    # Store price at moment of purchase (so it doesn't change if product price changes later)
+    price: Mapped[float] = mapped_column(Numeric(10, 2), nullable=False)
+
+    # Relationships
+    order: Mapped["Order"] = relationship("Order", back_populates="order_items")
+    product: Mapped["Product"] = relationship("Product")
+
+    # Serialization
+    def to_dict(self, include_product: bool = False) -> Dict[str, Any]:
+        data = {
+            "id": self.id,
+            "order_id": self.order_id,
+            "product_id": self.product_id,
+            "quantity": self.quantity,
+            "price": float(self.price) if self.price is not None else 0.0,
+        }
+        
+        if include_product and self.product:
+            # Assumes Product model has a to_dict method
+            data["product"] = self.product.to_dict()
+            
         return data

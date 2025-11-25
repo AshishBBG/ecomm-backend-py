@@ -12,7 +12,7 @@ Improvements:
 
 from __future__ import annotations
 from typing import Any, Dict
-
+from datetime import datetime
 from sqlalchemy import func, Numeric
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -45,10 +45,10 @@ class Product(db.Model):
     )
 
     # Timestamps
-    created_at: Mapped = mapped_column(
+    created_at: Mapped[datetime] = mapped_column(
         db.DateTime(timezone=True), server_default=func.now(), nullable=False
     )
-    updated_at: Mapped = mapped_column(
+    updated_at: Mapped[datetime] = mapped_column(
         db.DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False
     )
 
@@ -56,7 +56,7 @@ class Product(db.Model):
     # Relationships
     # -------------------------
     category = relationship("Category", back_populates="products", lazy="select")
-
+    cart_items = relationship("Cart", back_populates="product", cascade="all, delete-orphan")
     # -------------------------
     # Representation
     # -------------------------

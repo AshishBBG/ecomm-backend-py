@@ -29,7 +29,7 @@ class Cart(db.Model):
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
 
     user_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
-    product_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey("products.id", ondelete="SET NULL"), nullable=False, index=True)
+    product_id: Mapped[int | None] = mapped_column(db.Integer, db.ForeignKey("products.id", ondelete="SET NULL"), nullable=True, index=True)
 
     quantity: Mapped[int] = mapped_column(db.Integer, nullable=False, server_default="1")
 

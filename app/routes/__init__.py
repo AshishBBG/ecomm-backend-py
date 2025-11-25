@@ -1,6 +1,6 @@
 # Dynamic blueprint registration for existing route modules
 def register_blueprints(app):
-    modules = ['auth_routes','product_routes','category_routes','cart_routes','order_routes','admin_routes']
+    modules = ['auth_routes','product_routes','category_routes','cart_routes','order_routes','admin_routes', 'payment_routes', 'user_routes']
     for mod in modules:
         try:
             m = __import__(f'app.routes.{mod}', fromlist=['bp','blueprint'])

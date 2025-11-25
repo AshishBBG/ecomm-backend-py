@@ -1,6 +1,7 @@
 from flask import Flask
 from .extensions import db, migrate, bcrypt, jwt, ma, cors, limiter
 from .routes import register_blueprints
+from app import models
 
 def create_app(config_object=None):
     app = Flask(__name__, instance_relative_config=True)

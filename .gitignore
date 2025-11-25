@@ -1,0 +1,20 @@
+# .gitignore
+
+# Virtual Environments (Windows/Linux mismatch)
+venv/
+venv_new/
+
+# Local Secrets (Security risk)
+.env
+instance/
+
+# Bytecode (Temporary files)
+__pycache__/
+*.pyc
+app/__pycache__/
+app/routes/__pycache__/
+app/models/__pycache__/
+app/services/__pycache__/
+
+# Logs
+logs/

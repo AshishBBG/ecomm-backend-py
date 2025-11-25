@@ -23,7 +23,7 @@ class User(db.Model):
     )
 
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
-    username: Mapped[str] = mapped_column(db.String(120), unique=True, nullable=False)
+    username: Mapped[str] = mapped_column(db.String(120), unique=False, nullable=False)
     email: Mapped[str] = mapped_column(db.String(255), unique=True, nullable=False, index=True)
     password_hash: Mapped[str] = mapped_column(db.String(255), nullable=False)
 
@@ -40,6 +40,12 @@ class User(db.Model):
         back_populates="user",
         cascade="all, delete-orphan",
         lazy="select",
+    )
+    orders: Mapped[List["Order"]] = relationship(
+        "Order",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="select"
     )
 
     def __repr__(self) -> str:
