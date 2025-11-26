@@ -61,15 +61,15 @@ class BaseConfig:
     JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", SECRET_KEY)
 
     # Prefer canonical DATABASE_URL
-    _raw_db = os.getenv("DATABASE_URL") or os.getenv("DATABASE_URI")
-    DATABASE_URL: Optional[str] = _normalize_database_url(_raw_db)
+    _raw_db = os.getenv("MYSQL_URL") or os.getenv("MYSQL_URL")
+    MYSQL_URL: Optional[str] = _normalize_database_url(_raw_db)
 
     # If no DATABASE_URL, attempt to construct a MySQL URL from Railway vars
-    if not DATABASE_URL:
-        DATABASE_URL = _build_mysql_url_from_env()
+    if not MYSQL_URL:
+        MYSQL_URL = _build_mysql_url_from_env()
 
     # Final fallback to sqlite for local dev
-    SQLALCHEMY_DATABASE_URI: str = DATABASE_URL or f"sqlite:///{(BASE_DIR / 'instance' / 'ecommerce_dev.db')}"
+    SQLALCHEMY_DATABASE_URI: str = MYSQL_URL or f"sqlite:///{(BASE_DIR / 'instance' / 'ecommerce_dev.db')}"
 
     # SQLAlchemy options (compatible with SQLAlchemy 2.0)
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
